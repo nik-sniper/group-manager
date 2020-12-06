@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Common\Services\SocialGroupService;
 use Illuminate\Support\ServiceProvider;
 use VK\Client\VKApiClient;
 
@@ -14,8 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(VKApiClient::class, function () {
-            return new VKApiClient();
+        $this->app->singleton(SocialGroupService::class, function () {
+            return new SocialGroupService(
+                new VKApiClient()
+            );
         });
     }
 
