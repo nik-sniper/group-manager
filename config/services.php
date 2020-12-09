@@ -22,6 +22,11 @@ return [
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
+
+    ],
+
+    'vk' =>[
+        'token' => 'e58b8a0f52598eb7b749d5012288ff3a1ba51ac7b29586d04dd1d89785a9825d8ea1a4b701e7171eb57ab'
     ],
 
     'ses' => [
