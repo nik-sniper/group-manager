@@ -4,13 +4,7 @@
 namespace App\Common\Services;
 
 
-use App\Common\Traits\SocialGroupTrait;
-use League\Flysystem\Config;
-use VK\Actions\Groups;
 use VK\Client\VKApiClient;
-use VK\Client\VKApiRequest;
-use VK\Exceptions\VKApiException;
-use VK\Exceptions\VKClientException;
 
 class SocialGroupService
 {
@@ -21,15 +15,24 @@ class SocialGroupService
         $this->vkApi = $VKApiClient;
     }
 
-    public function search()
+    public function getGroups(string $search_text) : array
     {
-
-        $response = $this->vkApi->groups()->search(config('services.vk.token'), [
-                    'q' => 'All'
+        $groups = $this->vkApi->groups()->search(config('services.vk.token'), [
+                    'q' => $search_text
                 ]);
 
-        return $response;
+        return $groups;
     }
+
+    public function getMembers(int $groupId) : int
+    {
+        $members = $this->vkApi->groups()->getMembers(config('services.vk.token'), [
+            'group_id' => $groupId
+        ]);
+
+        return $members['count'];
+    }
+
 
 }
 
