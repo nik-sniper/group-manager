@@ -10,8 +10,10 @@
     "require": {
         "php": "^7.4",
         "backpack/crud": "4.1.*",
+        "barryvdh/laravel-ide-helper": "^2.9",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "google/apiclient": "^2.8",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/jetstream": "^1.6",

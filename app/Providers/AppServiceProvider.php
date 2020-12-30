@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
-use App\Common\Services\SocialGroupService;
+use App\Models\Groups\Services\GroupVKService;
+use App\Models\Groups\Services\GroupYoutubeService;
+use Google_Client;
 use Illuminate\Support\ServiceProvider;
 use VK\Client\VKApiClient;
 
@@ -15,9 +17,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(SocialGroupService::class, function () {
-            return new SocialGroupService(
-                new VKApiClient()
+        $this->app->singleton(GroupVKService::class, function () {
+            return new GroupVKService(
+                new VKApiClient(),
+                config('services.vk.token')
+            );
+        });
+        $this->app->singleton(GroupYoutubeService::class, function () {
+            return new GroupYoutubeService(
+                new Google_Client(),
+                config('services.youtube.token')
             );
         });
     }
