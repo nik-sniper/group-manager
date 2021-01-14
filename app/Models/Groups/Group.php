@@ -2,6 +2,7 @@
 
 namespace App\Models\Groups;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,14 +34,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Group extends Model
 {
-    use HasFactory;
+    use HasFactory, CrudTrait;
 
-    const PROVIDER_VK = 1;
-    const PROVIDER_YOUTUBE = 2;
+    const PROVIDER_VK = 'vk';
+    const PROVIDER_YOUTUBE = 'youtube';
 
     const SUPPORTED_GROUPS = [
         self::PROVIDER_VK,
         self::PROVIDER_YOUTUBE
+    ];
+
+    const LIST_GROUP = [
+        self::PROVIDER_YOUTUBE => 'Youtube',
+        self::PROVIDER_VK => 'Вконтакте'
+    ];
+
+    protected $fillable = [
+        'name',
+        'provider',
+        'provider_id',
+        'slug',
+        'category',
+        'meta'
     ];
 
     protected $casts = [
@@ -50,4 +65,9 @@ class Group extends Model
     protected $attributes = [
         'meta' => '{}'
     ];
+
+    public function getProviderAttribute($value)
+    {
+        return self::LIST_GROUP[$value];
+    }
 }
