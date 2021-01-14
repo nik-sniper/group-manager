@@ -54,8 +54,7 @@ class Group extends Model
         'provider',
         'provider_id',
         'slug',
-        'category',
-        'meta'
+        'category'
     ];
 
     protected $casts = [
