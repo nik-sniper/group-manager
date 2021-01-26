@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Groups\Contracts\GroupServiceInterface;
+use App\Jobs\FetchDataGroupsVk;
+use App\Jobs\FetchDataGroupsYoutube;
 use App\Models\Groups\Services\GroupVKService;
 use App\Models\Groups\Services\GroupYoutubeService;
 use Google_Client;
@@ -29,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
                 config('services.youtube.token')
             );
         });
+        $this->app->when(FetchDataGroupsVk::class)
+            ->needs(GroupServiceInterface::class)
+            ->give(function () {
+                return app()->get(GroupVKService::class);
+            });
+        $this->app->when(FetchDataGroupsYoutube::class)
+            ->needs(GroupServiceInterface::class)
+            ->give(function () {
+                return app()->get(GroupYoutubeService::class);
+            });
     }
 
     /**

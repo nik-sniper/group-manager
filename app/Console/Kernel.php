@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\FetchDataGroups;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +27,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
+        $schedule->call(function () {
+            dispatch(new FetchDataGroups());
+        })->everyFiveMinutes();
     }
 
     /**

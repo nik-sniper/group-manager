@@ -36,8 +36,8 @@ class Group extends Model
 {
     use HasFactory, CrudTrait;
 
-    const PROVIDER_VK = 'vk';
-    const PROVIDER_YOUTUBE = 'youtube';
+    const PROVIDER_VK = 'Vk';
+    const PROVIDER_YOUTUBE = 'Youtube';
 
     const SUPPORTED_GROUPS = [
         self::PROVIDER_VK,
