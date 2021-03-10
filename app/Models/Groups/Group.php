@@ -5,6 +5,8 @@ namespace App\Models\Groups;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * App\Models\Groups\Group
@@ -32,9 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Group whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class Group extends Model
+class Group extends Model implements HasMedia
 {
-    use HasFactory, CrudTrait;
+    use HasFactory, CrudTrait, InteractsWithMedia;
 
     const PROVIDER_VK = 'Vk';
     const PROVIDER_YOUTUBE = 'Youtube';

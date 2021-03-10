@@ -32,16 +32,6 @@ class AppServiceProvider extends ServiceProvider
                 config('services.youtube.token')
             );
         });
-        $this->app->when(FetchDataGroupsVk::class)
-            ->needs(GroupServiceInterface::class)
-            ->give(function () {
-                return app()->get(GroupVKService::class);
-            });
-        $this->app->when(FetchDataGroupsYoutube::class)
-            ->needs(GroupServiceInterface::class)
-            ->give(function () {
-                return app()->get(GroupYoutubeService::class);
-            });
     }
 
     /**

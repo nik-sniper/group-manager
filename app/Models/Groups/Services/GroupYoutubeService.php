@@ -4,6 +4,8 @@
 namespace App\Models\Groups\Services;
 
 use App\Groups\Contracts\GroupServiceInterface;
+use App\Models\Groups\Group;
+use App\Models\Groups\GroupYoutube;
 use Google_Client;
 use Google_Service_YouTube;
 
@@ -24,17 +26,18 @@ class GroupYoutubeService implements GroupServiceInterface
     }
 
     /**
-     * @param string|null $search_text
+     * @param array $options
      * @return array
      */
-    public function getGroups(string $search_text = null): array
+    public function getGroups(array $options): array
     {
-        $response = $this->youtubeClient->search->listSearch('snippet', [
-            'q' => $search_text,
-            'type' => 'channel'
-        ]);
+        $options = array_merge($options, ['type' => 'channel']);
+        $response = $this->youtubeClient->search->listSearch('snippet', $options);
 
-        return $response->getItems();
+        $result = $response->getItems();
+        $result['nextPageToken'] = $response->nextPageToken;
+
+        return $result;
     }
 
     /**
@@ -48,5 +51,42 @@ class GroupYoutubeService implements GroupServiceInterface
         ]);
 
         return $response->getItems()[0]->getStatistics()->subscriberCount;
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function toValidFormat($data): array
+    {
+        return [
+            'name' => $data->channelTitle,
+            'provider' => Group::PROVIDER_YOUTUBE,
+            'provider_id' => $data->channelId,
+            'slug' => $data->channelId,
+        ];
+    }
+
+    /**
+     * @param array|\Google_Service_YouTube_SearchResult $dataGroup
+     * @return Group
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     */
+    public function writeGroup($dataGroup): Group
+    {
+        $data = $this->toValidFormat($dataGroup->getSnippet());
+
+        $group = Group::firstOrCreate([
+            'provider' => $data['provider'],
+            'provider_id' => $data['provider_id']
+        ], $data);
+
+        if (! $group->hasMedia()) {
+            $group->addMediaFromUrl($dataGroup->getSnippet()->thumbnails->high->url)->toMediaCollection();
+        }
+
+        return $group;
     }
 }

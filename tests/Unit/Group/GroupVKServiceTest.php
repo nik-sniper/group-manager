@@ -20,4 +20,12 @@ class GroupVKServiceTest extends GroupServiceTest
             'provider' => Group::PROVIDER_VK
         ]);
     }
+
+    public function test_to_valid_format()
+    {
+        $response = $this->service->getGroups(['q' => 'game']);
+        $validData = $this->service->toValidFormat($response[0]);
+
+        $this->assertIsArray($validData);
+    }
 }

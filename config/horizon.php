@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use App\Models\Groups\Group;
 
 return [
 
@@ -183,12 +184,24 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
+            'groups' => [
+                'maxProcesses' => 10,
+                'queue' => Group::SUPPORTED_GROUPS,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+            ]
         ],
 
         'local' => [
             'supervisor-1' => [
                 'maxProcesses' => 3,
             ],
+            'groups' => [
+                'maxProcesses' => 10,
+                'queue' => Group::SUPPORTED_GROUPS,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+            ]
         ],
     ],
 ];

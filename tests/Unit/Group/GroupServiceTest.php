@@ -17,7 +17,7 @@ abstract class GroupServiceTest extends TestCase
 
     public function test_get_groups_should_succeed()
     {
-        $response = $this->service->getGroups('game');
+        $response = $this->service->getGroups(['q' => 'game']);
 
         $this->assertIsArray($response);
     }
@@ -27,5 +27,13 @@ abstract class GroupServiceTest extends TestCase
         $response = $this->service->getMembers($this->group->provider_id);
 
         $this->assertIsInt($response);
+    }
+
+    public function test_write_group()
+    {
+        $response = $this->service->getGroups(['q' => 'game']);
+        $group = $this->service->writeGroup($response[0]);
+
+        $this->assertInstanceOf(Group::class, $group);
     }
 }

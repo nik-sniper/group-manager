@@ -5,6 +5,7 @@ namespace App\Models\Groups\Services;
 
 
 use App\Groups\Contracts\GroupServiceInterface;
+use App\Models\Groups\Group;
 use VK\Client\VKApiClient;
 
 class GroupVKService implements GroupServiceInterface
@@ -27,18 +28,16 @@ class GroupVKService implements GroupServiceInterface
     }
 
     /**
-     * @param string|null $search_text
+     * @param array $options
      * @return array
      * @throws \VK\Exceptions\VKApiException
      * @throws \VK\Exceptions\VKClientException
      */
-    public function getGroups(string $search_text = null) : array
+    public function getGroups(array $options) : array
     {
-        $groups = $this->vkApi->groups()->search($this->token, [
-            'q' => $search_text
-        ]);
+        $groups = $this->vkApi->groups()->search($this->token, $options);
 
-        return $groups;
+        return $groups['items'];
     }
 
     /**
@@ -55,5 +54,42 @@ class GroupVKService implements GroupServiceInterface
         ]);
 
         return $members['count'];
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function toValidFormat($data): array
+    {
+        return [
+            'name' => $data['name'],
+            'provider' => Group::PROVIDER_VK,
+            'provider_id' => $data['id'],
+            'slug' => $data['screen_name']
+        ];
+    }
+
+    /**
+     * @param array|object $dataGroup
+     * @return Group
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     */
+    public function writeGroup($dataGroup): Group
+    {
+        $data = $this->toValidFormat($dataGroup);
+
+        $group = Group::firstOrCreate([
+            'provider' => $data['provider'],
+            'provider_id' => $data['provider_id']
+        ], $data);
+
+        if (! $group->hasMedia()) {
+            $group->addMediaFromUrl($dataGroup['photo_200'])->toMediaCollection();
+        }
+
+        return $group;
     }
 }

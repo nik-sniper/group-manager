@@ -4,17 +4,31 @@
 namespace App\Groups\Contracts;
 
 
+use App\Models\Groups\Group;
+
 interface GroupServiceInterface
 {
     /**
-     * @param string|null $search_text
+     * @param array $options
      * @return array
      */
-    public function getGroups(string $search_text = null) : array;
+    public function getGroups(array $options) : array;
 
     /**
      * @param string $groupId
      * @return int
      */
     public function getMembers(string $groupId) : int;
+
+    /**
+     * @param array|object $data
+     * @return array
+     */
+    public function toValidFormat($data) : array;
+
+    /**
+     * @param array|object $dataGroup
+     * @return Group
+     */
+    public function writeGroup($dataGroup) : Group;
 }
